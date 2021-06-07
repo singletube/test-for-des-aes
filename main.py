@@ -311,13 +311,13 @@ class Ui_MainWindow(object):
 
 
 
-# Наследуемся от виджета из PyQt5.QtWidgets и от класса с интерфейсом
+
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        # Вызываем метод для загрузки интерфейса из класса Ui_MainWindow,
-        # остальное без изменений
         self.setupUi(self)
+        self.setGeometry(0, 0, 1920, 1080)
+        self.setFixedSize(1920, 1080)
 
 
 if __name__ == '__main__':
