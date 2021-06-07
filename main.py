@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -36,12 +36,12 @@ class Ui_MainWindow(object):
         self.Aes_teory.setFont(font)
         self.Aes_teory.setObjectName("Aes_teory")
         self.verticalLayout_2.addWidget(self.Aes_teory)
-        self.Aes_teory_2 = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
+        self.Aes_test = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(24)
-        self.Aes_teory_2.setFont(font)
-        self.Aes_teory_2.setObjectName("Aes_teory_2")
-        self.verticalLayout_2.addWidget(self.Aes_teory_2)
+        self.Aes_test.setFont(font)
+        self.Aes_test.setObjectName("Aes_test")
+        self.verticalLayout_2.addWidget(self.Aes_test)
         self.Aes_zadani = QtWidgets.QPushButton(self.verticalLayoutWidget_2)
         font = QtGui.QFont()
         font.setPointSize(24)
@@ -86,22 +86,22 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.a1 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(28)
+        font.setPointSize(20)
         self.a1.setFont(font)
         self.a1.setObjectName("a1")
         self.verticalLayout.addWidget(self.a1)
         self.a2 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(28)
+        font.setPointSize(20)
         self.a2.setFont(font)
         self.a2.setObjectName("a2")
         self.verticalLayout.addWidget(self.a2)
-        self.radioButton_3 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
+        self.a3 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(28)
-        self.radioButton_3.setFont(font)
-        self.radioButton_3.setObjectName("radioButton_3")
-        self.verticalLayout.addWidget(self.radioButton_3)
+        font.setPointSize(20)
+        self.a3.setFont(font)
+        self.a3.setObjectName("a3")
+        self.verticalLayout.addWidget(self.a3)
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(310, 570, 961, 50))
         font = QtGui.QFont()
@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setGeometry(QtCore.QRect(310, 630, 961, 41))
-        self.progressBar.setProperty("value", 24)
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
         self.Obuchenie.setText(_translate("MainWindow", "Обучение симетричным алгоритмам шифрования DES и AES"))
         self.Aes_label.setText(_translate("MainWindow", "AES"))
         self.Aes_teory.setText(_translate("MainWindow", "Теория"))
-        self.Aes_teory_2.setText(_translate("MainWindow", "Тест"))
+        self.Aes_test.setText(_translate("MainWindow", "Тест"))
         self.Aes_zadani.setText(_translate("MainWindow", "Задания"))
         self.Des_label.setText(_translate("MainWindow", "DES"))
         self.des_teory.setText(_translate("MainWindow", "Теория"))
@@ -144,7 +144,7 @@ class Ui_MainWindow(object):
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:14pt;\">o</span><span style=\" font-family:\'Times New Roman\'; font-size:7pt;\">   </span><span style=\" font-family:\'Times New Roman\',\'serif\'; font-size:14pt; font-weight:600;\">алгоритм для симметричного шифрования, разработанный фирмой IBM и утверждённый правительством США в 1977 году как официальный стандарт (FIPS 46-3)</span><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt;\"> </span></p></body></html>"))
         self.a1.setText(_translate("MainWindow", "Ответ 1"))
         self.a2.setText(_translate("MainWindow", "Ответ 1"))
-        self.radioButton_3.setText(_translate("MainWindow", "Ответ 1"))
+        self.a3.setText(_translate("MainWindow", "Ответ 1"))
         self.pushButton.setText(_translate("MainWindow", "Следующий вопрос"))
 
 
@@ -153,11 +153,92 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setFixedSize(1280, 720)
+        self.button_group = QButtonGroup()
+        self.button_group.addButton(self.a1)
+        self.button_group.addButton(self.a2)
+        self.button_group.addButton(self.a3)
         self.main_text.hide()
+        self.textBrowser.setReadOnly(True)
+        self.des_test.clicked.connect(self.des_test_started)
+        self.button_group.buttonClicked.connect(self._on_radio_button_clicked)
+        self.pushButton.clicked.connect(self.next_q)
+        self.pushButton.hide()
+        self.progress = 0
+        self.all_answ = []
+        self.shifr = 0
 
+        self.textBrowser.setText('')
+        self.des = ['DES – это', 'Размер блока для DES равен: ', 'В основе алгоритма лежит сеть Фейстеля с: ',
+                    'Ключ имеет длину:', 'Сколько существует перестановок в стандарте DES:',
+                    'Какие перестановки существуют в стандарте DES', 'Как называется модификация DESa']
+        self.des_answers = [['алгоритм для симметричного шифрования, разработанный фирмой IBM\n и утверждённый правительством США в 1977 году как официальный\n стандарт (FIPS 46-3)',
+                             'симметричный алгоритм блочного шифрования\n (размер блока 128 бит, ключ 128/192/256 бит),\n принятый в качестве стандарта шифрования правительством\n США по результатам конкурса AES',
+                             '-----------------'], ['36 бит', '64 бит', '84 бит'], ['14 циклами', '16 циклами', '18 циклами'],
+                            ['64 бит', '56 бит', '36 бит'], ['3', '4', '2'], ['Простые', 'Расширенные', 'Сокращенные'],
+                            ['Triple Des', 'М-506', 'Deh']]
+
+
+    def des_test_started(self):
+        self.Disable_all()
+        self.progress = 0
+        self.shifr = 'des'
+        self.Make_qest(self.shifr, self.progress)
+
+    def Make_qest(self, shifr, num):
+        if shifr == 'des':
+            a = ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+    "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+    "p, li { white-space: pre-wrap; }\n"
+    "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
+                 f" text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:24pt; font-weight:600;\">Вопрос: {num + 1}</span></p>\n"
+    "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+                 "text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:14pt;\">o</span><span style=\""
+                 " font-family:\'Times New Roman\'; font-size:7pt;\">   </span><span style=\" font-family:\'"
+                 f"Times New Roman\',\'serif\'; font-size:14pt; font-weight:600;\">{self.des[num]}"
+                 "</span><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt;\"> </span></p></body></html>")
+
+            answers = self.des_answers[num]
+        self.textBrowser.setHtml(a)
+        b = [self.a1, self.a2, self.a3]
+        for i in range(3):
+            b[i].setText(answers[i])
+
+    def _on_radio_button_clicked(self, button):
+        self.pushButton.show()
+
+
+    def next_q(self):
+        self.progress += 1
+        if self.progress < 7:
+            self.progressBar.setValue(15 * self.progress)
+        else:
+            self.progressBar.setValue(100)
+
+        a = self.button_group.checkedButton().objectName()
+        self.all_answ.append(a)
+        self.button_group.setExclusive(False)
+        self.a1.setChecked(False)
+        self.a2.setChecked(False)
+        self.a3.setChecked(False)
+        self.button_group.setExclusive(True)
+        self.Make_qest(self.shifr, self.progress)
+        self.pushButton.hide()
+
+
+
+    def Disable_all(self):
+        for i in (self.des_test, self.des_teory, self.Aes_teory, self.Aes_test, self.Aes_zadani, self.des_zadanie):
+            i.setDisabled(True)
+
+
+
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MyWidget()
-    ex.show()
-    sys.exit(app.exec_())
+    form = MyWidget()
+    form.show()
+    sys.excepthook = except_hook
+    sys.exit(app.exec())
