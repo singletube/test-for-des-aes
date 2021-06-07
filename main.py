@@ -1,7 +1,6 @@
 import sys
 
-from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QProgressDialog
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -86,19 +85,19 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.a1 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(16)
         self.a1.setFont(font)
         self.a1.setObjectName("a1")
         self.verticalLayout.addWidget(self.a1)
         self.a2 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(16)
         self.a2.setFont(font)
         self.a2.setObjectName("a2")
         self.verticalLayout.addWidget(self.a2)
         self.a3 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(20)
+        font.setPointSize(16)
         self.a3.setFont(font)
         self.a3.setObjectName("a3")
         self.verticalLayout.addWidget(self.a3)
@@ -160,6 +159,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.main_text.hide()
         self.textBrowser.setReadOnly(True)
         self.des_test.clicked.connect(self.des_test_started)
+        self.Aes_test.clicked.connect(self.aes_test_started)
         self.button_group.buttonClicked.connect(self._on_radio_button_clicked)
         self.pushButton.clicked.connect(self.next_q)
         self.pushButton.hide()
@@ -174,14 +174,50 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.des_answers = [['алгоритм для симметричного шифрования, разработанный фирмой IBM\n и утверждённый правительством США в 1977 году как официальный\n стандарт (FIPS 46-3)',
                              'симметричный алгоритм блочного шифрования\n (размер блока 128 бит, ключ 128/192/256 бит),\n принятый в качестве стандарта шифрования правительством\n США по результатам конкурса AES',
                              '-----------------'], ['36 бит', '64 бит', '84 бит'], ['14 циклами', '16 циклами', '18 циклами'],
-                            ['64 бит', '56 бит', '36 бит'], ['3', '4', '2'], ['Простые', 'Расширенные', 'Сокращенные'],
+                            ['64 бит', '56 бит', '36 бит'], ['3', '4', '2'], ['Расширенные, Простые', 'Расширенные, Простые, Сокращенные', 'Простые, Сокращенные'],
                             ['Triple Des', 'М-506', 'Deh']]
+
+        self.aes = ['AES – это', 'Размер блока в AES:', 'Размер ключа в AES может быть', 'Что такое SubBytes?',
+                    'Поддержка ускорения AES была введена фирмой Intel в семейство процессоров:', 'От размера ключа зависит',
+                    'AES зашифровывает и расшифровывает']
+
+        self.aes_answers = [['криптографический алгоритм, реализующий блочное симметричное\n шифрование с переменной длиной ключа. Разработан Брюсом \nШнайером в 1993 году. Представляет собой сеть Фейстеля. Выполнен на простых\n и быстрых операциях: XOR, подстановка, сложение.',
+                             'алгоритм для симметричного шифрования, разработанный фирмой \nIBM и утверждённый правительством США в 1977 году как официальный\n стандарт (FIPS 46-3)',
+                             'симметричный алгоритм блочного шифрования (размер блока 128 бит, ключ \n128/192/256 бит), принятый в качестве стандарта \nшифрования правительством США'],
+                            ['256 бит', '128 бит', '64 бит'], ['64/156/284', '128/192/256', '16/36/64'],
+                            ['побайтовая подстановка в S-боксе с фиксированной таблицей замен', 'перемешивание байтов в столбцах',
+                             'побайтовый сдвиг строк матрицы State на различное количество байт'],
+                            ['x86', 'x97', 'x75'], ['число раундов шифрования', 'количество матриц', 'размер блока'],
+                            ['256-битовые блоки данных', '192-битовые блоки данных', '128-битовые блоки данных']]
+
+        self.a1.hide()
+        self.a2.hide()
+        self.a3.hide()
+        self.progressBar.hide()
+        self.textBrowser.hide()
+
 
 
     def des_test_started(self):
         self.Disable_all()
         self.progress = 0
         self.shifr = 'des'
+        self.a1.show()
+        self.a2.show()
+        self.a3.show()
+        self.progressBar.show()
+        self.textBrowser.show()
+        self.Make_qest(self.shifr, self.progress)
+
+    def aes_test_started(self):
+        self.Disable_all()
+        self.progress = 0
+        self.shifr = 'aes'
+        self.a1.show()
+        self.a2.show()
+        self.a3.show()
+        self.progressBar.show()
+        self.textBrowser.show()
         self.Make_qest(self.shifr, self.progress)
 
     def Make_qest(self, shifr, num):
@@ -199,6 +235,20 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                  "</span><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt;\"> </span></p></body></html>")
 
             answers = self.des_answers[num]
+        else:
+            a = ("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+                 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+                 "p, li { white-space: pre-wrap; }\n"
+                 "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+                 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
+                 f" text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:24pt; font-weight:600;\">Вопрос: {num + 1}</span></p>\n"
+                 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+                 "text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:14pt;\">o</span><span style=\""
+                 " font-family:\'Times New Roman\'; font-size:7pt;\">   </span><span style=\" font-family:\'"
+                 f"Times New Roman\',\'serif\'; font-size:14pt; font-weight:600;\">{self.aes[num]}"
+                 "</span><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt;\"> </span></p></body></html>")
+
+            answers = self.aes_answers[num]
         self.textBrowser.setHtml(a)
         b = [self.a1, self.a2, self.a3]
         for i in range(3):
@@ -207,29 +257,80 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def _on_radio_button_clicked(self, button):
         self.pushButton.show()
 
+    def final_check(self, shifr):
+        if shifr == 'des':
+            a = ['a1', 'a2', 'a2', 'a2', 'a1', 'a2', 'a1']
+            count = 0
+            for i in range(7):
+                if self.all_answ[i] == a[i]:
+                    count += 1
+        if shifr == 'aes':
+            a = ['a3', 'a2', 'a2', 'a1', 'a1', 'a1', 'a3']
+            count = 0
+            for i in range(7):
+                if self.all_answ[i] == a[i]:
+                    count += 1
+        return count
+
+
 
     def next_q(self):
         self.progress += 1
         if self.progress < 7:
             self.progressBar.setValue(15 * self.progress)
+            a = self.button_group.checkedButton().objectName()
+            self.all_answ.append(a)
+            self.button_group.setExclusive(False)
+            self.a1.setChecked(False)
+            self.a2.setChecked(False)
+            self.a3.setChecked(False)
+            self.button_group.setExclusive(True)
+            self.Make_qest(self.shifr, self.progress)
+            self.pushButton.hide()
         else:
+            a = self.button_group.checkedButton().objectName()
+            self.all_answ.append(a)
+            self.button_group.setExclusive(False)
+            self.a1.setChecked(False)
+            self.a2.setChecked(False)
+            self.a3.setChecked(False)
+            self.button_group.setExclusive(True)
             self.progressBar.setValue(100)
+            c = self.final_check(self.shifr)
+            if c <= 3:
+                out = 'неудовлетворительно'
+            elif c <= 6:
+                out = 'хорошо'
+            else:
+                out = 'Отлично'
 
-        a = self.button_group.checkedButton().objectName()
-        self.all_answ.append(a)
-        self.button_group.setExclusive(False)
-        self.a1.setChecked(False)
-        self.a2.setChecked(False)
-        self.a3.setChecked(False)
-        self.button_group.setExclusive(True)
-        self.Make_qest(self.shifr, self.progress)
-        self.pushButton.hide()
+            d = QtWidgets.QDialog()
+            b1 = QtWidgets.QLabel(f"Вы набрали {self.final_check(self.shifr)}, {out}", d)
+            d.setFixedSize(200, 100)
+            b1.move(10, 50)
+            d.setWindowTitle("Dialog")
+            d.setWindowModality(QtCore.Qt.ApplicationModal)
+            d.exec_()
+            self.Disable_all(True)
+            self.a1.hide()
+            self.a2.hide()
+            self.a3.hide()
+            self.progressBar.hide()
+            self.textBrowser.hide()
+            self.pushButton.hide()
 
 
 
-    def Disable_all(self):
-        for i in (self.des_test, self.des_teory, self.Aes_teory, self.Aes_test, self.Aes_zadani, self.des_zadanie):
-            i.setDisabled(True)
+
+
+
+    def Disable_all(self, arg=False):
+        if arg:
+            for i in (self.des_test, self.des_teory, self.Aes_teory, self.Aes_test, self.Aes_zadani, self.des_zadanie):
+                i.setDisabled(False)
+        else:
+            for i in (self.des_test, self.des_teory, self.Aes_teory, self.Aes_test, self.Aes_zadani, self.des_zadanie):
+                i.setDisabled(True)
 
 
 
