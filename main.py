@@ -1,6 +1,10 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup, QProgressDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
+import sys
+from PyQt5.QAxContainer import QAxWidget
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QFileDialog,
+                             QMessageBox, QApplication)
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -151,6 +155,11 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.axWidget = QAxWidget(self)
+        layout = QGridLayout(self)
+        layout.addWidget(self.axWidget)
+        layout.setGeometry(QtCore.QRect(310, 80, 961, 591))
+
         self.setFixedSize(1280, 720)
         self.button_group = QButtonGroup()
         self.button_group.addButton(self.a1)
@@ -162,6 +171,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.Aes_test.clicked.connect(self.aes_test_started)
         self.button_group.buttonClicked.connect(self._on_radio_button_clicked)
         self.pushButton.clicked.connect(self.next_q)
+        self.Aes_teory.clicked.connect(self.read_teory)
         self.pushButton.hide()
         self.progress = 0
         self.all_answ = []
@@ -272,6 +282,14 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                     count += 1
         return count
 
+
+    def read_teory(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Выберите файл word', '', 'word(*.docx *.doc)')
+        self.axWidget.clear()
+        self.axWidget.dynamicCall('SetVisible (bool Visible)', 'false')
+        self.axWidget.setProperty('DisplayAlerts', False)
+        self.axWidget.setControl(path)
 
 
     def next_q(self):
