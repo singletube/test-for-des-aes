@@ -318,6 +318,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setGeometry(0, 0, 1920, 1080)
         self.setFixedSize(1920, 1080)
+        self.main_text.hide()
 
 
 if __name__ == '__main__':
