@@ -1,5 +1,5 @@
 import sys
-
+import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
 import sys
 from PyQt5.QAxContainer import QAxWidget
@@ -158,7 +158,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.axWidget = QAxWidget(self)
         layout = QGridLayout(self)
         layout.addWidget(self.axWidget)
-        layout.setGeometry(QtCore.QRect(310, 80, 961, 591))
+        layout.setGeometry(QtCore.QRect(340, 80, 930, 591))
+        self.axWidget.setDisabled(True)
 
         self.setFixedSize(1280, 720)
         self.button_group = QButtonGroup()
@@ -172,6 +173,9 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.button_group.buttonClicked.connect(self._on_radio_button_clicked)
         self.pushButton.clicked.connect(self.next_q)
         self.Aes_teory.clicked.connect(self.read_teory)
+        self.Aes_zadani.clicked.connect(self.read_teory)
+        self.des_teory.clicked.connect(self.read_teory)
+        self.des_zadanie.clicked.connect(self.read_teory)
         self.pushButton.hide()
         self.progress = 0
         self.all_answ = []
@@ -212,6 +216,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.Disable_all()
         self.progress = 0
         self.shifr = 'des'
+        self.axWidget.hide()
         self.a1.show()
         self.a2.show()
         self.a3.show()
@@ -220,6 +225,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.Make_qest(self.shifr, self.progress)
 
     def aes_test_started(self):
+        self.axWidget.hide()
         self.Disable_all()
         self.progress = 0
         self.shifr = 'aes'
@@ -238,6 +244,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
     "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
                  f" text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:24pt; font-weight:600;\">Вопрос: {num + 1}</span></p>\n"
+                 '<p> </p>\n'
     "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
                  "text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:14pt;\">o</span><span style=\""
                  " font-family:\'Times New Roman\'; font-size:7pt;\">   </span><span style=\" font-family:\'"
@@ -283,12 +290,19 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         return count
 
 
-    def read_teory(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, 'Выберите файл word', '', 'word(*.docx *.doc)')
+    def read_teory(self, sendler):
         self.axWidget.clear()
         self.axWidget.dynamicCall('SetVisible (bool Visible)', 'false')
         self.axWidget.setProperty('DisplayAlerts', False)
+        if self.sender().objectName() == 'Aes_teory':
+            path = os.path.abspath('docx/teoryAes.docx')
+        elif self.sender().objectName() == 'Aes_zadani':
+            path = os.path.abspath('docx/zadaniaAes.docx')
+        elif self.sender().objectName() == 'des_teory':
+            path = os.path.abspath('docx/teoryDes.docx')
+        elif self.sender().objectName() == 'des_zadanie':
+            path = os.path.abspath('docx/zadaniaDes.docx')
+        print(path)
         self.axWidget.setControl(path)
 
 
