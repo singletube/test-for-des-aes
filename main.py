@@ -2,8 +2,8 @@ import sys
 import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QButtonGroup
 import sys
-from PyQt5.QAxContainer import QAxWidget
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QFileDialog,
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QPushButton, QFileDialog, QVBoxLayout, QScrollArea,
                              QMessageBox, QApplication)
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -89,19 +89,19 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.a1 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(18)
         self.a1.setFont(font)
         self.a1.setObjectName("a1")
         self.verticalLayout.addWidget(self.a1)
         self.a2 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(18)
         self.a2.setFont(font)
         self.a2.setObjectName("a2")
         self.verticalLayout.addWidget(self.a2)
         self.a3 = QtWidgets.QRadioButton(self.verticalLayoutWidget)
         font = QtGui.QFont()
-        font.setPointSize(16)
+        font.setPointSize(18)
         self.a3.setFont(font)
         self.a3.setObjectName("a3")
         self.verticalLayout.addWidget(self.a3)
@@ -115,6 +115,16 @@ class Ui_MainWindow(object):
         self.progressBar.setGeometry(QtCore.QRect(310, 630, 961, 41))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
+        self.frame = QtWidgets.QLabel(self.centralwidget)
+        self.frame.setGeometry(QtCore.QRect(310, 80, 951, 591))
+        self.frame.setText("")
+        self.frame.setObjectName("frame")
+        self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
+        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(310, 80, 961, 591))
+        self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
+        self.slider = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
+        self.slider.setContentsMargins(0, 0, 0, 0)
+        self.slider.setObjectName("slider")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1280, 21))
@@ -151,16 +161,32 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Следующий вопрос"))
 
 
+
+class Widget(QWidget):
+    def __init__(self, parent, name_file):
+        super(Widget, self).__init__(parent)
+        self.setFixedSize(800, 600)
+
+        widget = QWidget()
+        layout = QVBoxLayout(self)
+        pixmap = QPixmap(name_file)
+        image = QtWidgets.QLabel()
+        image.setPixmap(pixmap)
+        layout.addWidget(image)
+        widget.setLayout(layout)
+        scroll = QScrollArea()
+        scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(widget)
+        vLayout = QVBoxLayout(self)
+        vLayout.addWidget(scroll)
+        self.setLayout(vLayout)
+
 class MyWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.axWidget = QAxWidget(self)
-        layout = QGridLayout(self)
-        layout.addWidget(self.axWidget)
-        layout.setGeometry(QtCore.QRect(340, 80, 930, 591))
-        self.axWidget.setDisabled(True)
-
         self.setFixedSize(1280, 720)
         self.button_group = QButtonGroup()
         self.button_group.addButton(self.a1)
@@ -179,7 +205,18 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.pushButton.hide()
         self.progress = 0
         self.all_answ = []
-        self.shifr = 0
+        self.DesT = Widget(self.centralwidget, 'Desteory.png')
+        self.DesT.setGeometry(QtCore.QRect(350, 90, 961, 591))
+        self.DesT.hide()
+        self.AesT = Widget(self.centralwidget, 'Aesteory.png')
+        self.AesT.setGeometry(QtCore.QRect(350, 90, 961, 591))
+        self.AesT.hide()
+        self.AesZ = Widget(self.centralwidget, 'Aesz.png')
+        self.AesZ.setGeometry(QtCore.QRect(350, 90, 961, 591))
+        self.AesZ.hide()
+        self.DesZ = Widget(self.centralwidget, 'Desz.png')
+        self.DesZ.setGeometry(QtCore.QRect(350, 90, 961, 591))
+        self.DesZ.hide()
 
         self.textBrowser.setText('')
         self.des = ['DES – это', 'Размер блока для DES равен: ', 'В основе алгоритма лежит сеть Фейстеля с: ',
@@ -216,7 +253,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.Disable_all()
         self.progress = 0
         self.shifr = 'des'
-        self.axWidget.hide()
+        self.AesT.hide()
+        self.DesT.hide()
+        self.AesZ.hide()
+        self.DesZ.hide()
         self.a1.show()
         self.a2.show()
         self.a3.show()
@@ -225,7 +265,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.Make_qest(self.shifr, self.progress)
 
     def aes_test_started(self):
-        self.axWidget.hide()
+        self.AesT.hide()
+        self.DesT.hide()
+        self.AesZ.hide()
+        self.DesZ.hide()
         self.Disable_all()
         self.progress = 0
         self.shifr = 'aes'
@@ -259,6 +302,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
                  "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
                  "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0;"
                  f" text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\'; font-size:24pt; font-weight:600;\">Вопрос: {num + 1}</span></p>\n"
+                 '<p> </p>\n'
                  "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
                  "text-indent:0px;\"><span style=\" font-family:\'Courier New\'; font-size:14pt;\">o</span><span style=\""
                  " font-family:\'Times New Roman\'; font-size:7pt;\">   </span><span style=\" font-family:\'"
@@ -291,19 +335,28 @@ class MyWidget(QMainWindow, Ui_MainWindow):
 
 
     def read_teory(self, sendler):
-        self.axWidget.clear()
-        self.axWidget.dynamicCall('SetVisible (bool Visible)', 'false')
-        self.axWidget.setProperty('DisplayAlerts', False)
+
         if self.sender().objectName() == 'Aes_teory':
-            path = os.path.abspath('docx/teoryAes.docx')
+            self.AesT.show()
+            self.DesT.hide()
+            self.AesZ.hide()
+            self.DesZ.hide()
         elif self.sender().objectName() == 'Aes_zadani':
-            path = os.path.abspath('docx/zadaniaAes.docx')
+            self.AesT.hide()
+            self.DesT.hide()
+            self.AesZ.show()
+            self.DesZ.hide()
         elif self.sender().objectName() == 'des_teory':
-            path = os.path.abspath('docx/teoryDes.docx')
+            self.AesT.hide()
+            self.DesT.show()
+            self.AesZ.hide()
+            self.DesZ.hide()
         elif self.sender().objectName() == 'des_zadanie':
-            path = os.path.abspath('docx/zadaniaDes.docx')
-        print(path)
-        self.axWidget.setControl(path)
+            self.AesT.hide()
+            self.DesT.hide()
+            self.AesZ.hide()
+            self.DesZ.show()
+
 
 
     def next_q(self):

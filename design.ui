@@ -67,7 +67,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="Aes_teory_2">
+      <widget class="QPushButton" name="Aes_test">
        <property name="font">
         <font>
          <pointsize>24</pointsize>
@@ -203,7 +203,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioButton_3">
+      <widget class="QRadioButton" name="a3">
        <property name="font">
         <font>
          <pointsize>28</pointsize>
@@ -246,6 +246,30 @@ p, li { white-space: pre-wrap; }
     <property name="value">
      <number>24</number>
     </property>
+   </widget>
+   <widget class="QLabel" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>80</y>
+      <width>951</width>
+      <height>591</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>80</y>
+      <width>961</width>
+      <height>591</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="slider"/>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
