@@ -257,6 +257,8 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.DesT.hide()
         self.AesZ.hide()
         self.DesZ.hide()
+
+
         self.a1.show()
         self.a2.show()
         self.a3.show()
